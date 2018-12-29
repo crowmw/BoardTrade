@@ -1,6 +1,5 @@
 ﻿using BoardTrade.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace BoardTrade.Data
 {

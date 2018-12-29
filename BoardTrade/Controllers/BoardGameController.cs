@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using BoardTrade.Data.Interfaces;
+using BoardTrade.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoardTrade.Controllers
@@ -7,18 +10,28 @@ namespace BoardTrade.Controllers
     [ApiController]
     public class BoardGameController : ControllerBase
     {
+        private readonly IBoardGame _boardGameService;
+
+        public BoardGameController(IBoardGame boardGameService)
+        {
+            _boardGameService = boardGameService;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<BoardGame>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var boardGames = _boardGameService.GetAll();
+
+            return Ok(boardGames);
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<BoardGame> Get(Guid id)
         {
-            return "value";
+            var boardGame = _boardGameService.GetById(id);
+            return Ok(boardGame);
         }
 
         // POST api/values

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoardTrade.Data\BoardTrade.Data.csproj" />
+    <ProjectReference Include="..\BoardTrade.Service\BoardTrade.Service.csproj" />
   </ItemGroup>
 
 </Project>
