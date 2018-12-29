@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BoardTrade.Data;
+﻿using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
+using BoardTrade.Data.Models;
 using BoardTrade.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace BoardTrade
 {
@@ -34,12 +30,36 @@ namespace BoardTrade
             );
 
             services.AddScoped<IBoardGame, BoardGameService>();
+            services.AddTransient<BoardTradeDbInitializer>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddIdentity<BoardTradeUser, IdentityRole>()
+                .AddEntityFrameworkStores<BoardTradeDbContext>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o =>
+                {
+                    o.LoginPath = new Microsoft.AspNetCore.Http.PathString("/login");
+                    o.LogoutPath = new Microsoft.AspNetCore.Http.PathString("/logout");
+
+                }
+                );
+                //.AddFacebook(o =>
+                //{
+                //    o.AppId = Configuration["facebook:appid"];
+                //    o.AppSecret = Configuration["Facebook:appsecret"];
+                //}
+
+            services.AddMvc()
+                .AddJsonOptions(opt =>
+                    {
+                        opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Error;
+                    }
+                )
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, BoardTradeDbInitializer seeder)
         {
             if (env.IsDevelopment())
             {
@@ -52,7 +72,10 @@ namespace BoardTrade
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
+ 
+            seeder.Seed().Wait();
         }
     }
 }

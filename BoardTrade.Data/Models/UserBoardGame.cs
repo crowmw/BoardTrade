@@ -8,6 +8,7 @@ namespace BoardTrade.Data.Models
     public class UserBoardGame
     {
         [Required]
+        [Key]
         public Guid Id { get; set; }
         [Required]
         public virtual BoardGame BoardGame { get; set; }

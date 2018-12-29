@@ -8,11 +8,13 @@ namespace BoardTrade.Data.Models
     public class BoardGame
     {
         [Required]
+        [Key]
         public Guid Id { get; set; }
         [Required]
         public string Slug { get; set; }
         [Required]
         public string Name { get; set; }
+        public string OriginalName { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public string ThumbnailUrl { get; set; }

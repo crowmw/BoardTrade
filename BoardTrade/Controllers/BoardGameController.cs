@@ -23,6 +23,8 @@ namespace BoardTrade.Controllers
         {
             var boardGames = _boardGameService.GetAll();
 
+            if (boardGames == null) return NotFound($"Not found any board game");
+
             return Ok(boardGames);
         }
 
@@ -31,6 +33,9 @@ namespace BoardTrade.Controllers
         public ActionResult<BoardGame> Get(Guid id)
         {
             var boardGame = _boardGameService.GetById(id);
+
+            if(boardGame == null) return NotFound($"Board game ${id} was not found.");
+
             return Ok(boardGame);
         }
 

@@ -11,6 +11,16 @@ namespace BoardTrade.Data
         }
 
         public DbSet<BoardGame> BoardGames { get; set; }
+        public DbSet<BoardTradeUser> User { get; set; }
         public DbSet<UserBoardGame> UsersBoardGames { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<BoardGame>()
+                .HasIndex(bg => bg.Slug)
+                .IsUnique();
+
+            base.OnModelCreating(builder);
+        }
     }
 }
