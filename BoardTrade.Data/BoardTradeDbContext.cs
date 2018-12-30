@@ -1,9 +1,12 @@
 ﻿using BoardTrade.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BoardTrade.Data
 {
-    public class BoardTradeDbContext : DbContext
+    public class BoardTradeDbContext : IdentityDbContext
     {
         public BoardTradeDbContext(DbContextOptions options) : base(options)
         {
@@ -11,7 +14,7 @@ namespace BoardTrade.Data
         }
 
         public DbSet<BoardGame> BoardGames { get; set; }
-        public DbSet<BoardTradeUser> User { get; set; }
+        public DbSet<User> User { get; set; }
         public DbSet<UserBoardGame> UsersBoardGames { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

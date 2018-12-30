@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace BoardTrade.Data.Models
 {
-    public class BoardTradeUser : IdentityUser
+    public class User : IdentityUser
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

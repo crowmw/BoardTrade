@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoardTrade.Controllers
@@ -12,13 +14,14 @@ namespace BoardTrade.Controllers
     {
         private readonly IBoardGame _boardGameService;
 
-        public BoardGameController(IBoardGame boardGameService)
+        public BoardGameController(IBoardGame boardGameService, IMapper mapper)
         {
             _boardGameService = boardGameService;
         }
 
         // GET api/values
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<BoardGame>> Get()
         {
             var boardGames = _boardGameService.GetAll();

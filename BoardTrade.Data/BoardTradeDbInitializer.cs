@@ -25,7 +25,7 @@ namespace BoardTrade.Data
             }
         }
 
-        List<BoardGame> _sampleBoardGames = new List<BoardGame>
+        private readonly List<BoardGame> _sampleBoardGames = new List<BoardGame>
         {
             new BoardGame()
             {
@@ -88,5 +88,7 @@ namespace BoardTrade.Data
                 TimeOfModification = DateTime.Now
             }
         };
+
+
     }
 }
