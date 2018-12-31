@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -90,6 +91,12 @@ namespace BoardTrade
                     }
                 )
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            //Add SPA client files
+            services.AddSpaStaticFiles(cfg =>
+            {
+                cfg.RootPath = "Client/build";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +114,19 @@ namespace BoardTrade
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
             app.UseMvc();
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "Client";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
+            });
  
             seeder.Seed().Wait();
             identitySeeder.Seed().Wait();
