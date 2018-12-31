@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
-using BoardTrade.Data.Models;
+﻿using AutoMapper;
 
 namespace BoardTrade.Data.Mapping
 {
@@ -10,6 +6,8 @@ namespace BoardTrade.Data.Mapping
     {
         public BoardGameMappingProfile()
         {
+            //CreateMap<BoardGameDto, BoardGame>();
+            //CreateMap<BoardGame, BoardGameDto>();
         }
     }
 }

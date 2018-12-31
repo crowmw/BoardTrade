@@ -1,4 +1,4 @@
-﻿namespace BoardTrade.Data
+﻿namespace BoardTrade.Enum
 {
     public enum Condition
     {

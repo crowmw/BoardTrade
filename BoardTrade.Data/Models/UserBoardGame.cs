@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BoardTrade.Enum;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace BoardTrade.Data.Models
 {

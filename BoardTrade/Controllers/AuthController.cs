@@ -1,7 +1,7 @@
-﻿using BoardTrade.Data;
+﻿using BoardTrade.Contract;
+using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
-using BoardTrade.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
