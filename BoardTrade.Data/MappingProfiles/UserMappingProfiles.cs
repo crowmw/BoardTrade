@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BoardTrade.Data.Models;
+using BoardTrade.Dtos;
 
 namespace BoardTrade.Contract.MappingProfiles
 {

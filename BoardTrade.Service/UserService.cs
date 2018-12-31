@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using BoardTrade.Contract;
 using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
+using BoardTrade.Dtos;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -92,5 +92,10 @@ namespace BoardTrade.Service
 
             return _mapper.Map<UserDto>(user);
         }
+
+        public async Task Logout()
+        {
+            await _signInMgr.SignOutAsync();
+        } 
     }
 }

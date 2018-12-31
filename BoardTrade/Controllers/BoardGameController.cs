@@ -19,7 +19,7 @@ namespace BoardTrade.Controllers
             _boardGameService = boardGameService;
         }
 
-        // GET api/values
+        // GET api/boardgame
         [HttpGet]
         [Authorize]
         public ActionResult<IEnumerable<BoardGame>> Get()
@@ -31,7 +31,7 @@ namespace BoardTrade.Controllers
             return Ok(boardGames);
         }
 
-        // GET api/values/5
+        // GET api/boardgame/5
         [HttpGet("{id}")]
         public ActionResult<BoardGame> Get(Guid id)
         {
@@ -42,19 +42,19 @@ namespace BoardTrade.Controllers
             return Ok(boardGame);
         }
 
-        // POST api/values
+        // POST api/boardgame
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
         
-        // PUT api/values/5
+        // PUT api/boardgame/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/boardgame/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BoardTrade.Contract
+namespace BoardTrade.Dtos
 {
     public class UserDto
     {

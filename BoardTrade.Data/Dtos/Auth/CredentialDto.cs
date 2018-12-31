@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BoardTrade.Contract
+namespace BoardTrade.Dtos
 {
     public class CredentialDto
     {

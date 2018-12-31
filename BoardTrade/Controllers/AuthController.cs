@@ -1,7 +1,8 @@
-﻿using BoardTrade.Contract;
-using BoardTrade.Data;
+﻿using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
+using BoardTrade.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,6 +24,7 @@ namespace BoardTrade.Controllers
             _usr = usr;
         }
 
+        [AllowAnonymous]
         [HttpPost("api/auth/login")]
         public async Task<IActionResult> Login([FromBody] CredentialDto credentials)
         {
@@ -41,6 +43,7 @@ namespace BoardTrade.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("api/auth/register")]
         public async Task<IActionResult> Register([FromBody] RegisterCredentialDto credentials)
         {
@@ -53,6 +56,21 @@ namespace BoardTrade.Controllers
                 return Ok(await _usr.Register(credentials.UserName, credentials.Email, credentials.Password, credentials.PasswordConfirm));   
             }
             catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("api/auth/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _usr.Logout();
+                return Ok($"Logged out user {this.User.Identity.Name}");
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
