@@ -2,7 +2,6 @@
 using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
-using BoardTrade.Dtos;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
@@ -24,7 +23,7 @@ namespace BoardTrade.Service
             _mapper = mapper;
         }
 
-        public async Task<UserDto> Login(string userNameOrEmail, string password)
+        public async Task<User> Login(string userNameOrEmail, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
                 throw new InvalidOperationException("Password is required");
@@ -54,13 +53,13 @@ namespace BoardTrade.Service
 
             if (signInResult.Succeeded)
             {
-                return _mapper.Map<UserDto>(user);
+                return user;
             }
 
             throw new InvalidOperationException("Login failed.");
         }
 
-        public async Task<UserDto> Register(string userName, string email, string password, string passwordConfirm)
+        public async Task<User> Register(string userName, string email, string password, string passwordConfirm)
         {
             if (string.IsNullOrWhiteSpace(password))
                 throw new InvalidOperationException("Password is required");
@@ -90,7 +89,7 @@ namespace BoardTrade.Service
 
             user = await _usrMgr.FindByNameAsync(userName);
 
-            return _mapper.Map<UserDto>(user);
+            return user;
         }
 
         public async Task Logout()

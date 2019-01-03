@@ -2,14 +2,14 @@
 using BoardTrade.Data.Models;
 using BoardTrade.Dtos;
 
-namespace BoardTrade.Contract.MappingProfiles
+namespace BoardTrade.Mapping
 {
     public class UserMappingProfiles : Profile
     {
         public UserMappingProfiles()
         {
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>()
+                .ReverseMap();
         }
     }
 }

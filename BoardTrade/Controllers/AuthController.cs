@@ -1,4 +1,5 @@
-﻿using BoardTrade.Data;
+﻿using AutoMapper;
+using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
 using BoardTrade.Dtos;
@@ -15,18 +16,20 @@ namespace BoardTrade.Controllers
     {
         private readonly BoardTradeDbContext _ctx;
         private readonly SignInManager<User> _signInMgr;
-        private readonly IUser _usr;
+        private IUser _usr;
+        private IMapper _mapper;
 
-        public AuthController(BoardTradeDbContext ctx, SignInManager<User> signInMgr, IUser usr)
+        public AuthController(BoardTradeDbContext ctx, SignInManager<User> signInMgr, IUser usr, IMapper mapper)
         {
             _ctx = ctx;
             _signInMgr = signInMgr;
             _usr = usr;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
         [HttpPost("api/auth/login")]
-        public async Task<IActionResult> Login([FromBody] CredentialDto credentials)
+        public async Task<IActionResult> Login([FromBody] LoginCredentialsDto credentials)
         {
             try
             {
@@ -35,7 +38,9 @@ namespace BoardTrade.Controllers
                     return BadRequest(ModelState);
                 }
 
-                return Ok(await _usr.Login(credentials.UserName, credentials.Password));
+                var user = await _usr.Login(credentials.UserName, credentials.Password);
+
+                return Ok(_mapper.Map<UserDto>(user));
             }
             catch (InvalidOperationException ex)
             {
@@ -45,7 +50,7 @@ namespace BoardTrade.Controllers
 
         [AllowAnonymous]
         [HttpPost("api/auth/register")]
-        public async Task<IActionResult> Register([FromBody] RegisterCredentialDto credentials)
+        public async Task<IActionResult> Register([FromBody] RegisterCredentialsDto credentials)
         {
             try
             {
@@ -53,7 +58,10 @@ namespace BoardTrade.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                return Ok(await _usr.Register(credentials.UserName, credentials.Email, credentials.Password, credentials.PasswordConfirm));   
+
+                var user = await _usr.Register(credentials.UserName, credentials.Email, credentials.Password, credentials.PasswordConfirm);
+
+                return Ok(_mapper.Map<UserDto>(user));   
             }
             catch (InvalidOperationException ex)
             {

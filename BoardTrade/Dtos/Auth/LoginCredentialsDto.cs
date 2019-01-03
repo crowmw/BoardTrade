@@ -2,7 +2,7 @@
 
 namespace BoardTrade.Dtos
 {
-    public class CredentialDto
+    public class LoginCredentialsDto
     {
         [Required]
         public string UserName { get; set; }

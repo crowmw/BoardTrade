@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace BoardTrade.Data.Mapping
+namespace BoardTrade.Mapping
 {
     public class BoardGameMappingProfile : Profile
     {

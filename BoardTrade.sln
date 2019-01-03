@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoardTrade", "BoardTrade\Bo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoardTrade.Data", "BoardTrade.Data\BoardTrade.Data.csproj", "{A6AAA5E9-46E3-4D20-BCBF-2DD230D0161F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoardTrade.Service", "BoardTrade.Service\BoardTrade.Service.csproj", "{F099F546-CA35-4054-8B99-C96F4A848A39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoardTrade.Service", "BoardTrade.Service\BoardTrade.Service.csproj", "{F099F546-CA35-4054-8B99-C96F4A848A39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
