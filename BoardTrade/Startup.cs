@@ -3,7 +3,7 @@ using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
 using BoardTrade.Service;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,24 +12,46 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BoardTrade
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _env;
+        IConfigurationRoot _config;
+
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            _env = env;
+            _config = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(_config.GetSection("Logging"));
+                builder.AddConsole();
+                builder.AddDebug();
+            });
+
+            services.AddSingleton(_config);
             services.AddDbContext<BoardTradeDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+                options.UseSqlServer(_config["ConnectionStrings:DefaultConnection"])
             );
 
             services.AddScoped<IBoardGame, BoardGameService>();
@@ -44,14 +66,38 @@ namespace BoardTrade
                 .AddEntityFrameworkStores<BoardTradeDbContext>();
 
             //add cookie authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(o =>
+                {
+                    o.IncludeErrorDetails = true;
+                    o.Audience = _config["Tokens:Audience"];
+                    o.ClaimsIssuer = _config["Tokens:Issuer"];
+                    o.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = _config["Tokens:Issuer"],
+                        ValidAudience = _config["Tokens:Audience"],
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = signingKey,
+                        ValidateLifetime = true,
+                        RequireExpirationTime = true,
+                        RequireSignedTokens = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                    o.SaveToken = true;
+                })
                 .AddCookie(o =>
                 {
                     o.LoginPath = new Microsoft.AspNetCore.Http.PathString("/login");
                     o.LogoutPath = new Microsoft.AspNetCore.Http.PathString("/logout");
 
-                }
-                );
+                });
             //.AddFacebook(o =>
             //{
             //    o.AppId = Configuration["facebook:appid"];
@@ -102,6 +148,7 @@ namespace BoardTrade
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, BoardTradeDbInitializer seeder, BoardTradeIdentityInitializer identitySeeder)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

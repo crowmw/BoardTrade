@@ -8,5 +8,6 @@ namespace BoardTrade.Data.Interfaces
         Task<User> Login(string userNameOrEmail, string password);
         Task<User> Register(string userName, string email, string password, string passwordConfirm);
         Task Logout();
+        string CreateToken(User user);
     }
 }

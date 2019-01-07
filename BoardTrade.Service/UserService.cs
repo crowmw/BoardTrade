@@ -3,7 +3,12 @@ using BoardTrade.Data;
 using BoardTrade.Data.Interfaces;
 using BoardTrade.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BoardTrade.Service
@@ -14,13 +19,17 @@ namespace BoardTrade.Service
         private readonly UserManager<User> _usrMgr;
         private readonly SignInManager<User> _signInMgr;
         private readonly IMapper _mapper;
+        private readonly IPasswordHasher<User> _hasher;
+        private readonly IConfigurationRoot _config;
 
-        public UserService(BoardTradeDbContext ctx, UserManager<User> usrMgr, SignInManager<User> signInMgr, IMapper mapper)
+        public UserService(BoardTradeDbContext ctx, UserManager<User> usrMgr, SignInManager<User> signInMgr, IPasswordHasher<User> hasher, IMapper mapper, IConfigurationRoot config)
         {
             _ctx = ctx;
             _usrMgr = usrMgr;
             _signInMgr = signInMgr;
             _mapper = mapper;
+            _hasher = hasher;
+            _config = config;
         }
 
         public async Task<User> Login(string userNameOrEmail, string password)
@@ -95,6 +104,28 @@ namespace BoardTrade.Service
         public async Task Logout()
         {
             await _signInMgr.SignOutAsync();
-        } 
+        }
+
+        public string CreateToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Tokens:Issuer"],
+                audience: _config["Tokens:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(30),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

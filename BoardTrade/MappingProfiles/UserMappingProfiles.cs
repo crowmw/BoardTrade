@@ -10,6 +10,7 @@ namespace BoardTrade.Mapping
         {
             CreateMap<UserDto, User>()
                 .ReverseMap();
+ 
         }
     }
 }
