@@ -124,12 +124,12 @@ namespace BoardTrade.Controllers
                             });
                         }
                     }
+                    return BadRequest("Invalid username or password");
                 }
             }
             catch (Exception ex)
             {
-
-                throw;
+                return BadRequest(ex.Message);
             }
 
             return BadRequest("Failed to generate token");

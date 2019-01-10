@@ -7,8 +7,12 @@ const GlobalStyle = createGlobalStyle`
   body {
     padding: 0;
     margin: 0;
-    font-family: -apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    background: ${({ theme }) => theme.colors.greyLightest}
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    background: ${({ theme }) => theme.colors.greyLightest};
+    -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   }
 
   *, *::before, *::after{

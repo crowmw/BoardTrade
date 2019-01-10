@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { login } from '../actions/authorizationActions'
 import styled from 'styled-components'
 import Paper from '../components/Paper'
 import TextField from '../components/TextField'
@@ -17,6 +20,22 @@ const LoginButton = styled(Button)`
 `
 
 class Authorization extends Component {
+  componentDidMount() {
+    if (window.PasswordCredential || window.FederatedCredential) {
+      navigator.credentials
+        .get({
+          password: true
+        })
+        .then(c => {
+          if (c) {
+            if (c.type === 'password') {
+              return this.props.login(c.id, c.password)
+            }
+          }
+        })
+    }
+  }
+
   render() {
     return (
       <StyledWrapper>
@@ -35,4 +54,15 @@ class Authorization extends Component {
   }
 }
 
-export default Authorization
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      login
+    },
+    dispatch
+  )
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Authorization)
