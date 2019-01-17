@@ -10,6 +10,7 @@ const StyledHeaderWrapper = styled.header`
   height: 50px;
   background: ${({ theme }) => theme.colors.blue};
   top: 0;
+  position: sticky;
 `
 
 const Header = () => {

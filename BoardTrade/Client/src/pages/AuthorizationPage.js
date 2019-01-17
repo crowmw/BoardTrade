@@ -20,6 +20,11 @@ const LoginButton = styled(Button)`
 `
 
 class Authorization extends Component {
+  state = {
+    username: '',
+    password: ''
+  }
+
   componentDidMount() {
     if (window.PasswordCredential || window.FederatedCredential) {
       navigator.credentials
@@ -36,13 +41,23 @@ class Authorization extends Component {
     }
   }
 
+  updateUsernameHandler = (e) => this.setState({username: e.currentTarget.value})
+
+  updatePasswordHandler = (e) => this.setState({password: e.currentTarget.value})
+
+  loginHandler = () => {
+    const {props: {login}, state: {username, password}} = this
+
+    login(username, password)
+  }
+
   render() {
     return (
       <StyledWrapper>
         <Paper>
-          <TextField fullWidth placeholder="Login lub email" />
-          <TextField fullWidth placeholder="Hasło" type="password" />
-          <LoginButton type="submit" fullWidth>
+          <TextField fullWidth placeholder="Login lub email" onChange={this.updateUsernameHandler} />
+          <TextField fullWidth placeholder="Hasło" type="password" onChange={this.updatePasswordHandler} />
+          <LoginButton fullWidth onClick={this.loginHandler}>
             Zaloguj się
           </LoginButton>
         </Paper>
